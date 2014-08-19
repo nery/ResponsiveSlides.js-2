@@ -1,0 +1,23 @@
+{
+	"boss": true,
+	"eqeqeq": true,
+	"eqnull": true,
+	"expr": true,
+	"immed": true,
+	"noarg": true,
+	"onevar": true,
+	"quotmark": "single",
+	"smarttabs": true,
+	"trailing": true,
+	"unused": true,
+	"node": true,
+	"browser": true,
+	"globalstrict": false,
+	"globals": {
+		"console": true,
+		"$": true,
+		"jquery": true,
+		"jQuery": true,
+		"require": true
+	}
+}

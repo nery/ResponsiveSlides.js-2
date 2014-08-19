@@ -1,0 +1,32 @@
+{
+	"name": "jQuery ResponsiveSlides.js 2",
+	"title": "jQuery responsiveSlides Plugin",
+	"description": "Simple & lightweight responsive slider plugin.",
+	"keywords": [
+		"jquery",
+		"ResponsiveSlides",
+		"plugins"
+	],
+	"version": "0.9.0",
+	"author": {
+		"name": "Nery Orellana",
+		"email": "nery.orellana@gmail.com",
+		"url": "https://github.com/nery"
+	},
+	"maintainers": [
+		{
+			"name": "Nery Orellana",
+			"email": "nery.orellana@gmail.com",
+			"url": "https://github.com/nery"
+		}
+	],
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://zenorocha.mit-license.org/"
+		}
+	],
+	"dependencies": {
+		"jquery": ">=1.4"
+	}
+}

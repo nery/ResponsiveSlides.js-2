@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jQuery Boilerplate</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script src="../src/jquery.responsiveSlides.js"></script>
+
+		<style>
+
+		.rslides {
+			position: relative;
+			list-style: none;
+			overflow: hidden;
+			width: 100%;
+			padding: 0;
+			margin: 0;
+		}
+		.rslides li {
+			-webkit-backface-visibility: hidden;
+			display: none;
+			width: 100%;
+			left: 0;
+			top: 0;
+		}
+
+		.rslides img {
+			display: block;
+			height: auto;
+			float: left;
+			width: 100%;
+			border: 0;
+		}
+		.rslides_s {
+			float: none;
+			display: block;
+			position : absolute;
+			opacity : 0;
+			z-index : 0;
+		}
+
+		.rslides_active {
+			float: left;
+			position: relative;
+			opacity: 1;
+			z-index: 3;
+		}
+
+		.rslides_on {
+			opacity: 1;
+			z-index: 2;
+		}
+
+		</style>
+	</head>
+	<body>
+		
+
+		<ul class="rslides">
+		  <li><img src="http://responsiveslides.com/1.jpg" alt=""></li>
+		  <li><img src="http://responsiveslides.com/2.jpg" alt=""></li>
+		  <li><img src="http://responsiveslides.com/3.jpg" alt=""></li>
+		</ul>
+
+		<script>
+			$(function() {
+				$(".rslides").responsiveSlides({
+					debug: true,
+					before: function(id){
+						console.log('before', id);
+					},
+					after: function(id){
+						console.log('after', id);
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
