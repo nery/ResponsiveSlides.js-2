@@ -50,9 +50,9 @@
 			debug: false,
 			transitions: supportsTransitions(), // check if transitions are support, allow overide in options
 			auto: true, // Boolean: Animate automatically, true or false,
-			delay: null, // Defaults to the timeout for the first slide
+			delay: null, // Defaults to the pause for the first slide
 			speed: 500, // Integer: Speed of the transition, in milliseconds
-			timeout: 5000, // Integer: Time between slide transitions, in milliseconds
+			pause: 5000, // Integer: Time between slide transitions, in milliseconds
 			namespace: 'rslides', // String: change the default namespace used
 			easing: 'ease-in-out', // String: easing option as per CSS spec
 			before: $.noop, // Function: Before callback
@@ -77,7 +77,7 @@
 		init: function() {
 
 			if (this.options.debug) {
-				console.log('responsiveSlides - timeout', this.options.timeout);
+				console.log('responsiveSlides - pause', this.options.pause);
 				console.log('responsiveSlides - transitions supported', this.options.transitions);
 			}
 
@@ -127,9 +127,27 @@
 			var $this = $(this),
 				options = $this.data('options');
 
-			$this.data('loop', setInterval(function() {
-				$this.loopSlides();
-			}, options.timeout));
+			if (typeof options.delay === 'number') {
+				setTimeout(function() {
+
+					if (options.debug)
+						console.log('delay');
+
+					// update index
+					$this.data('index', 1);
+					options.before(1, options.id);
+					$this.transitionTo(1);
+
+					$this.data('loop', setInterval(function() {
+						$this.loopSlides();
+					}, options.pause));
+
+				}, options.delay);
+			} else {
+				$this.data('loop', setInterval(function() {
+					$this.loopSlides();
+				}, options.pause));
+			}
 
 			if (options.debug)
 				console.log('start');
@@ -163,7 +181,7 @@
 			$this.transitionTo(index);
 
 			if (options.debug)
-				console.log(options.id + ' looping @', options.timeout);
+				console.log(options.id + ' looping @', options.pause);
 
 			return $this;
 		},
