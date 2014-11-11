@@ -2,8 +2,7 @@
 
 // the semi-colon before function invocation is a safety net against concatenated
 // scripts and/or other plugins which may not be closed properly.
-;
-(function($, window, document, undefined) {
+;(function($, window, document, undefined) {
 
 	// undefined is used here as the undefined global variable in ECMAScript 3 is
 	// mutable (ie. it can be changed by someone else). undefined isn't really being
@@ -15,26 +14,26 @@
 	// minified (especially when both are regularly referenced in your plugin).
 
 	// Check for transition support only once
-	// TODO: fallback to JS animation for older browsers
-	var supportsTransitions = function() {
+	function supportsTransitions() {
 		var property = 'transition',
+			prop, i,
 			doc = document.body || document.documentElement,
-			styles = doc.style;
+			styles = doc.style,
+			vendor = ['Moz', 'Webkit', 'Khtml', 'O', 'ms'];
 
 		if (typeof styles[prop] === 'string') {
 			return true;
 		}
 		// Tests for vendor specific prop
-		var vendor = ['Moz', 'Webkit', 'Khtml', 'O', 'ms'],
-			prop = property.charAt(0).toUpperCase() + property.substr(1),
-			i;
+		prop = property.charAt(0).toUpperCase() + property.substr(1);
+
 		for (i = 0; i < vendor.length; i++) {
 			if (typeof styles[vendor[i] + prop] === 'string') {
 				return true;
 			}
 		}
 		return false;
-	};
+	}
 
 	// Create the defaults once
 	var pluginName = 'responsiveSlides',
@@ -42,9 +41,10 @@
 		defaults = {
 			debug: false,
 			transitions: supportsTransitions(), // check if transitions are support, allow overide in options
-			auto: true, // Boolean: Animate automatically, true or false
+			auto: true, // Boolean: Animate automatically, true or false,
+			delay: null, // Defaults to the pause for the first slide
 			speed: 500, // Integer: Speed of the transition, in milliseconds
-			timeout: 5000, // Integer: Time between slide transitions, in milliseconds
+			pause: 5000, // Integer: Time between slide transitions, in milliseconds
 			namespace: 'rslides', // String: change the default namespace used
 			easing: 'ease-in-out', // String: easing option as per CSS spec
 			before: $.noop, // Function: Before callback
@@ -57,9 +57,9 @@
 		this.element = element;
 		this.options = $.extend({}, defaults, options);
 		this.options.id = this.options.namespace + '_' + id;
-		this.options.activeClass = this.options.namespace + '_active';
-		this.options.visibleClass = this.options.namespace + '_on';
-		this.options.slideClass = this.options.namespace + '_s';
+		this.options.activeClass = this.options.namespace + '--active';
+		this.options.visibleClass = this.options.namespace + '--on';
+		this.options.slideClass = this.options.namespace + '--slide';
 		this._defaults = defaults;
 		this._name = pluginName;
 		this.init();
@@ -69,7 +69,7 @@
 		init: function() {
 
 			if (this.options.debug) {
-				console.log('responsiveSlides - timeout', this.options.timeout);
+				console.log('responsiveSlides - pause', this.options.pause);
 				console.log('responsiveSlides - transitions supported', this.options.transitions);
 			}
 
@@ -100,7 +100,6 @@
 
 		},
 		start: function(el) {
-			// el.loopSlides();
 			el.start();
 		}
 	};
@@ -120,9 +119,27 @@
 			var $this = $(this),
 				options = $this.data('options');
 
-			$this.data('loop', setInterval(function() {
-				$this.loopSlides();
-			}, options.timeout));
+			if (typeof options.delay === 'number') {
+				setTimeout(function() {
+
+					if (options.debug)
+						console.log('delay');
+
+					// update index
+					$this.data('index', 1);
+					options.before(1, options.id);
+					$this.transitionTo(1);
+
+					$this.data('loop', setInterval(function() {
+						$this.loopSlides();
+					}, options.pause));
+
+				}, options.delay);
+			} else {
+				$this.data('loop', setInterval(function() {
+					$this.loopSlides();
+				}, options.pause));
+			}
 
 			if (options.debug)
 				console.log('start');
@@ -153,14 +170,14 @@
 			// Pre/before slide callback
 			options.before(index, options.id);
 			// Slide handler
-			$this.slideTo(index);
+			$this.transitionTo(index);
 
 			if (options.debug)
-				console.log(options.id + ' looping @', options.timeout);
+				console.log(options.id + ' looping @', options.pause);
 
 			return $this;
 		},
-		slideTo: function(index) {
+		transitionTo: function(index) {
 			var $this = $(this),
 				$slide = $this.children(),
 				options = $this.data('options');
@@ -185,11 +202,11 @@
 			var $this = $(this),
 				options = $this.data('options');
 
-			clearInterval($this.data('loop'));
-			$this.unbind().remove();
-
 			if (options.debug)
 				console.log('destroy', options.id);
+
+			clearInterval($this.data('loop'));
+			$this.unbind().remove();
 
 			return true;
 		}

@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 		// Banner definitions
 		meta: {
 			banner: '/*\n' +
-				' *  <%= pkg.title || pkg.name %> - v<%= pkg.version %>\n' +
+				' *  <%= pkg.title || pkg.name %> - v <%= pkg.version %>\n' +
 				' *  <%= pkg.description %>\n' +
 				' *  <%= pkg.homepage %>\n' +
 				' *\n' +
