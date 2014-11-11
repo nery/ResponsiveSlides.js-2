@@ -1,5 +1,5 @@
 /*
- *  jQuery responsiveSlides Plugin - v0.9.0
+ *  jQuery responsiveSlides Plugin - v 0.9.1
  *  Simple & lightweight responsive slider plugin.
  *  
  *
